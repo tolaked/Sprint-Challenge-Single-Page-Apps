@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Header from "./Header";
+import CharacterCard from "./CharacterCard";
 
 const characterApi = "https://rickandmortyapi.com/api/character/";
 export default function CharacterList() {
@@ -12,7 +13,6 @@ export default function CharacterList() {
       .get(characterApi)
       .then(res => {
         setCharacterList(res.data.results);
-        console.log("this", res.data.results);
       })
       .catch(err => {
         return err.message;
@@ -28,6 +28,9 @@ export default function CharacterList() {
       <Header />
       {characterList.map(character => (
         <h5 key={character.name}> {character.name}</h5>
+      ))}
+      {characterList.map(character => (
+        <CharacterCard character={characterList} />
       ))}
     </section>
   );
