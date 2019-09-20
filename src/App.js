@@ -9,11 +9,9 @@ export default function App() {
       <div>
         <Link to="/">Home</Link>
       </div>
-      <div>
-        <Link to="/characters/:id">Home</Link>
-      </div>
-      <Route exact path="/" component={CharacterList} />
-      <Route path="/" render={props => <Character {...props} />} />
+      <CharacterList />
+      {/* <Route exact path="/" component={CharacterList} /> */}
+      {/* <Route path="/" render={props => <Character {...props} />} /> */}
     </main>
   );
 }
