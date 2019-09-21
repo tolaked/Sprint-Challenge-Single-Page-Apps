@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Styled from "styled-components";
 import Header from "./Header";
+import ButtonComponent from "./Button";
 
 const StyledSection = Styled.section`
 
@@ -27,8 +28,7 @@ transform: translateZ(0);
 
 const StyledImg = Styled.img`
     width:150px
-    padding-top:10px;
-    transform: scale(1.05);
+    padding-top:20px;
 `;
 
 const StyledInput = Styled.input`
@@ -41,16 +41,18 @@ const characterApi = "https://rickandmortyapi.com/api/character/";
 export default function CharacterList() {
   // TODO: Add useState to track data from useEffect
 
+  const [info, setInfo] = useState([]);
   const [characterList, setCharacterList] = useState([]);
   const [display, setDisplay] = useState([]);
 
   const [searchList, setsearchList] = useState("");
 
-  const fetchCharacters = () => {
+  const fetchCharacters = URL => {
     axios
-      .get(characterApi)
+      .get(URL)
       .then(res => {
         setCharacterList(res.data.results);
+        setInfo(res.data.info);
       })
       .catch(err => {
         return err.message;
@@ -58,7 +60,7 @@ export default function CharacterList() {
   };
 
   useEffect(() => {
-    fetchCharacters();
+    fetchCharacters(characterApi);
   }, []);
 
   useEffect(() => {
@@ -78,7 +80,7 @@ export default function CharacterList() {
   };
 
   return (
-    <StyledSection className="character-list">
+    <div>
       <Header />
       <br />
 
@@ -88,19 +90,27 @@ export default function CharacterList() {
         value={searchList}
         onChange={e => setsearchList(e.target.value)}
       />
+      <ButtonComponent
+        prev={() => fetchCharacters(info.prev)}
+        next={() => fetchCharacters(info.next)}
+        prevDisabled={info.prev === ""}
+        nextDisabled={info.next === ""}
+      />
       <br />
-      {display.map(character => (
-        <StyledDiv>
-          <StyledImg src={character.image} alt="a chracter image" />
-          <h5 key={character.name}> {character.name}</h5>
-          <p>
-            <strong>Status</strong>: {character.status}
-          </p>
-          <p>
-            <strong>Gender</strong>: {character.gender}
-          </p>
-        </StyledDiv>
-      ))}
-    </StyledSection>
+      <StyledSection className="character-list">
+        {display.map(character => (
+          <StyledDiv>
+            <StyledImg src={character.image} alt="a chracter image" />
+            <h5 key={character.name}> {character.name}</h5>
+            <p>
+              <strong>Status</strong>: {character.status}
+            </p>
+            <p>
+              <strong>Gender</strong>: {character.gender}
+            </p>
+          </StyledDiv>
+        ))}
+      </StyledSection>
+    </div>
   );
 }
